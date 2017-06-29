@@ -1,0 +1,45 @@
+body {
+  margin: 40px auto;
+}
+
+svg#firstFloor {
+  position: relative;
+  background-image: url("./../images/firstFloor.PNG");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+svg#secondFloor {
+  position: relative;
+  background-image: url("./../images/secondFloor.PNG");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+svg#basementFloor {
+  position: relative;
+  background-image: url("./../images/basementFloor.PNG");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.coverage-area {
+  opacity: 0.5;
+  fill: blue;
+}
+
+.purple {
+  opacity: 0.5;
+  fill: blue;
+}
+
+#map {
+}
+
+#firstPage {
+  background-color: #FF6009;
+}
+
+#smallText {
+  font-size: 0.75em;
+}
