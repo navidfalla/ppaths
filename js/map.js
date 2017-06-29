@@ -11,7 +11,7 @@ $(function(){
     trigger: 'focus'
   });
 
-  // view camera button
+  // view camera button testing testin
   $(document).on('click', '.view-cam-btn', function(){
     var coverageAreaID = $(this).nextAll('input').eq(0).val();
     var selection = d3.select("#" + coverageAreaID);
