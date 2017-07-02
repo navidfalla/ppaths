@@ -11,7 +11,7 @@ $(function(){
     trigger: 'focus'
   });
 
-  // view camera button testing testin
+  // view camera button
   $(document).on('click', '.view-cam-btn', function(){
     var coverageAreaID = $(this).nextAll('input').eq(0).val();
     var selection = d3.select("#" + coverageAreaID);
@@ -23,9 +23,14 @@ $(function(){
 
   // set dest button
   $(document).on('click', '.set-dest-btn', function(){
-    var coverageAreaID = $(this).nextAll('input').eq(0).val();
-    console.log('set dest button has parent ID: '+coverageAreaID);
-  });
+      var roomId = $(this).data('roomId');
+      //d3.selectAll('.coverage-area').style('fill', 'blue');
+      var polygon = d3.select('polygon#'+roomId);
+      polygon.append('circle').attr('cx', 25).attr('cy', 25).attr('r', 20).style('fill', 'red');
+      //$(this).siblings().toggleClass('coverage-area');
+      // do you stuff here with polygon
+      polygon.style('fill','purple');
+    });
 
   $('.coverage-area').click(function(){
     console.log('the ID of this coverage area is: '+$(this).attr('id'));
@@ -82,9 +87,10 @@ $('#basementFloorBtn').click(function(){
 
 var canvas;
 
-function createPopover(coverageAreaID) {
-  var content = '<button id="view" class="btn btn-sm btn-primary view-cam-btn">View Camera</button> <button id="set" class="btn btn-sm btn-primary set-dest-btn">Set Destination</button> <input type="hidden" name="coverage-area-id" value="'+coverageAreaID+'">';
-  return content;
+function createPopover(roomId) {
+     var content = '<button id="view" data-room-id="'+roomId+'" class="btn btn-sm btn-primary view-cam-btn">View Camera</button>'+
+                   '<button id="set" data-room-id="'+roomId+'" class="btn btn-sm btn-primary set-dest-btn">Set Destination</button> ';
+     return content;
 }
 
 function hideFloors() {
@@ -105,136 +111,33 @@ function firstFloor() {
       .attr("height", 500)
       .attr("id", "firstFloor");
 
-  // draw polygon over stairwell
-  var coverageAreaIDA1 = 'roomA1';
-  var content = createPopover("coverageAreaIDA1");
-  var polygonA1 = [[65, 215], [65, 250], [140, 250], [140, 215]];
-  var roomA1 = canvas.append("polygon")
-    .attr("points", polygonA1)
+  function createRoom(number,polygon){
+  var roomId = 'room'+number;
+  var content = createPopover(roomId);
+  var room  = canvas.append("polygon")
+    .attr("points", polygon)
     .attr("class", "coverage-area")
-    .attr("id", coverageAreaIDA1)
+    .attr("id", roomId)
     .attr("data-toggle", "popover")
     .attr('data-placement', 'top')
     .attr("data-content", content)
     .attr("tabindex", "0")
     .attr("data-trigger", "focus");
+    return room;
+  }
 
-  var coverageAreaIDA2 = 'roomA2';
-  var content = createPopover("coverageAreaIDA2");
-  var polygonA2 = [[140, 215], [140, 278], [230, 278], [230, 215]];
-  var roomA2 = canvas.append("polygon")
-    .attr("points", polygonA2)
-    .attr("class", "coverage-area")
-    .attr("id", coverageAreaIDA2)
-    .attr("data-toggle", "popover")
-    .attr('data-placement', 'top')
-    .attr("data-content", content)
-    .attr("tabindex", "0")
-    .attr("data-trigger", "focus");
+  // draw Polygons
+  var roomA1 = createRoom('A1',[[65, 215], [65, 250], [140, 250], [140, 215]]);
+var roomA2 = createRoom('A2',[[140, 215], [140, 278], [230, 278], [230, 215]]);
+var roomA3 = createRoom('A3',[[230, 215], [230, 278], [320, 278], [320, 215]]);
+var roomA4 = createRoom('A4',[[320, 215], [320, 278], [400, 278], [400, 215]]);
+var roomA5 = createRoom('A5',[[65, 250], [65, 278], [140, 278], [140, 250]]);
+var roomA6 = createRoom('A6',[[42, 215], [42, 278], [65, 278], [65, 215]]);
+var roomA7 = createRoom('A7',[[332, 120], [332, 215], [355, 215], [355, 120]]);
+var roomA8 = createRoom('A8',[[302, 120], [302, 215], [332, 215], [332, 120]]);
+var roomA9 = createRoom('A9',[[302, 99], [302, 120], [355, 120], [355, 99]]);
+var roomA9 = createRoom('A10',[[408, 215], [408, 278], [462, 278], [462, 215]]);
 
-  var coverageAreaIDA3 = 'roomA3';
-  var content = createPopover("coverageAreaIDA3");
-  var polygonA3 = [[230, 215], [230, 278], [320, 278], [320, 215]];
-  var roomA3 = canvas.append("polygon")
-    .attr("points", polygonA3)
-    .attr("class", "coverage-area")
-    .attr("id", coverageAreaIDA3)
-    .attr("data-toggle", "popover")
-    .attr('data-placement', 'top')
-    .attr("data-content", content)
-    .attr("tabindex", "0")
-    .attr("data-trigger", "focus");
-
-  var coverageAreaIDA4 = 'roomA4';
-  var content = createPopover("coverageAreaIDA4");
-  var polygonA4 = [[320, 215], [320, 278], [400, 278], [400, 215]];
-  var roomA4 = canvas.append("polygon")
-    .attr("points", polygonA4)
-    .attr("class", "coverage-area")
-    .attr("id", coverageAreaIDA4)
-    .attr("data-toggle", "popover")
-    .attr('data-placement', 'top')
-    .attr("data-content", content)
-    .attr("tabindex", "0")
-    .attr("data-trigger", "focus");
-
-  var coverageAreaIDA5 = 'roomA5';
-  var content = createPopover("coverageAreaIDA5");
-  var polygonA5 = [[65, 250], [65, 278], [140, 278], [140, 250]];
-  var roomA5 = canvas.append("polygon")
-    .attr("points", polygonA5)
-    .attr("class", "coverage-area")
-    .attr("id", coverageAreaIDA5)
-    .attr("data-toggle", "popover")
-    .attr('data-placement', 'top')
-    .attr("data-content", content)
-    .attr("tabindex", "0")
-    .attr("data-trigger", "focus");
-
-  var coverageAreaIDA6 = 'roomA6';
-  var content = createPopover("coverageAreaIDA6");
-  var polygonA6 = [[42, 215], [42, 278], [65, 278], [65, 215]];
-  var roomA6 = canvas.append("polygon")
-    .attr("points", polygonA6)
-    .attr("class", "coverage-area")
-    .attr("id", coverageAreaIDA6)
-    .attr("data-toggle", "popover")
-    .attr('data-placement', 'top')
-    .attr("data-content", content)
-    .attr("tabindex", "0")
-    .attr("data-trigger", "focus");
-
-  var coverageAreaIDA7 = 'roomA7';
-  var content = createPopover("coverageAreaIDA7");
-  var polygonA7 = [[332, 120], [332, 215], [355, 215], [355, 120]];
-  var roomA7 = canvas.append("polygon")
-    .attr("points", polygonA7)
-    .attr("class", "coverage-area")
-    .attr("id", coverageAreaIDA7)
-    .attr("data-toggle", "popover")
-    .attr('data-placement', 'top')
-    .attr("data-content", content)
-    .attr("tabindex", "0")
-    .attr("data-trigger", "focus");
-
-  var coverageAreaIDA8 = 'roomA8';
-  var content = createPopover("coverageAreaIDA8");
-  var polygonA8 = [[302, 120], [302, 215], [332, 215], [332, 120]];
-  var roomA8 = canvas.append("polygon")
-    .attr("points", polygonA8)
-    .attr("class", "coverage-area")
-    .attr("id", coverageAreaIDA8)
-    .attr("data-toggle", "popover")
-    .attr('data-placement', 'top')
-    .attr("data-content", content)
-    .attr("tabindex", "0")
-    .attr("data-trigger", "focus");
-
-  var coverageAreaIDA9 = 'roomA9';
-  var content = createPopover("coverageAreaIDA9");
-  var polygonA9 = [[302, 99], [302, 120], [355, 120], [355, 99]];
-  var roomA9 = canvas.append("polygon")
-    .attr("points", polygonA9)
-    .attr("class", "coverage-area")
-    .attr("id", coverageAreaIDA9)
-    .attr("data-toggle", "popover")
-    .attr('data-placement', 'top')
-    .attr("data-content", content)
-    .attr("tabindex", "0")
-    .attr("data-trigger", "focus");
-
-  var coverageAreaIDA10 = 'roomA10';
-  var content = createPopover("coverageAreaIDA10");
-  var polygonA10 = [[408, 215], [408, 278], [462, 278], [462, 215]];
-  var roomA10 = canvas.append("polygon")
-    .attr("points", polygonA10)
-    .attr("class", "coverage-area")
-    .attr("id", coverageAreaIDA10)
-    .attr("data-toggle", "popover")
-    .attr('data-placement', 'top')
-    .attr("data-content", content)
-    .attr("tabindex", "0")
-    .attr("data-trigger", "focus");
 
 
     // function badGuy() {
