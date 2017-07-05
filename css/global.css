@@ -33,6 +33,15 @@ svg#basementFloor {
   fill: purple;
 }
 
+#circle {
+  width: 20px;
+  height: 20px;
+  background: #7fee1d;
+  -moz-border-radius: 60px;
+  -webkit-border-radius: 60px;
+  border-radius: 60px;
+}
+
 #map {
 }
 
