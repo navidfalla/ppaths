@@ -5,8 +5,8 @@ $(function(){
   firstFloor();
   secondFloor();
   basementFloor();
+  updateThreat()
   $('#firstFloorBtn').click();
-  drawThreat (102.5, 232.5);
 
   $('.coverage-area').popover({
     'html': true,
@@ -16,58 +16,53 @@ $(function(){
 
   // view camera button
   $(document).on('click', '.view-cam-btn', function(){
-    //var coverageAreaID = $(this).nextAll('input').eq(0).val();
-    //var selection = d3.select("#" + coverageAreaID);
-    //selection.styles("fill", "purple");
-    // console.log('view cam button has parent ID: '+coverageAreaID);
     var roomId = $(this).data('roomId');
     var polygon = d3.select('polygon#'+roomId);
-    // var mouseCoord = [0, 0];
-    // mouseCoord = d3.mouse(this);
-    // var x = mouseCoord[0];
-    // var y = mouseCoord[1];
+    var points = polygon.attr('points').split(",");
     //calculate midX
-    //var midX = (polygon.points[0].x + polygon.points[3].x) / 2;
+    var midX = (Number(points[0]) + Number(points[6])) / 2;
     //calculate midY
-    //var midY = (polygon.points[0].y + polygon.points[1].y) / 2;
+    var midY = (Number(points[1]) + Number(points[3])) / 2;
     // do you stuff here with polygon
-    polygon.style('fill','red'); //test
+    //polygon.style('fill','red'); //test
     //select the svg that the polygon is in
     var polygonParent = polygon.select(function() { return this.parentNode; });
     //clean the last selection
-      //select the parent
+      //select the parent and grand parent!
     var svgParent = polygonParent.select(function() { return this.parentNode; });
-      //delete circle element from children
-    svgParent.selectAll('.view').remove();
+    var svgGrandParent = svgParent.select(function() { return this.parentNode; });
+      //delete icon element from all children
+    svgGrandParent.selectAll('.view').remove();
     //add icon
     polygonParent.append('text')
                 .attr('text-anchor', 'middle')
                 .attr('dominant-baseline', 'central')
-                .attr("x", "102.5")
-                .attr("y", "232.5")
+                .attr("x", midX)
+                .attr("y", midY)
                 .attr("class", "view")
                 .style('font-family','FontAwesome')
-                .style('font-size','25px')
-                .style('color', function(d){
+                .style('font-size','20px')
+                .style('fill', function(d){
                   if(attacker===false) {return "blue"}
                   else {return "red"}
                   ;})
                 .text(function (d) {
-                return '\uf2be'
-                })
+                if(attacker===false){return '\uf2be'}
+                else {return '\uf21b'}
+                ;})
     });
 
   // set dest button
   $(document).on('click', '.set-dest-btn', function(){
       var roomId = $(this).data('roomId');
-      var polygon = d3.select('polygon#'+roomId);
-      //var polygonId = polygon.attr('id');
+      var polygon = d3.select('#'+roomId);
+      var points = polygon.attr('points').split(",");
       //calculate midX
-      //var midX = function (){ return (polygon.points[0].x + polygon.points[3].x) / 2; };
+      var midX = (Number(points[0]) + Number(points[6])) / 2;
       //calculate midY
-      //var midY = (polygon.points[0].y + polygon.points[1].y) / 2;
+      var midY = (Number(points[1]) + Number(points[3])) / 2;
       // do you stuff here with polygon
-      polygon.style('fill','purple'); //test
+      //polygon.style('fill','purple'); //test
       //select the svg that the polygon is in
       var polygonParent = polygon.select(function() { return this.parentNode; });
       //clean the last selection
@@ -79,12 +74,13 @@ $(function(){
       polygonParent.append('text')
                     .attr('text-anchor', 'middle')
                     .attr('dominant-baseline', 'central')
-                    .attr("x", "102.5")
-                    .attr("y", "232.5")
+                  //  .attr("x", midX)
+                    .attr("x", midX)
+                    .attr("y", midY)
                     .attr("class", "dest")
                     .style('font-family','FontAwesome')
-                    .style('font-size','30px')
-                    .style('color', 'green')
+                    .style('font-size','25px')
+                    .style('fill', 'green')
                     .text(function (d) {
                     return '\uf041'
                     })
@@ -96,7 +92,30 @@ $(function(){
 
 });
 
+var canvas;
 
+// function drawThreat (x, y){
+//   // canvas = d3.select("#map")
+//   //   .append("svg")
+//   //     .attr("width", 500)
+//   //     .attr("height", 500)
+//   //     .attr("id", "Threat");
+//
+//   var Threat = canvas.append('svg')
+//                     .append('text')
+//                     .attr('text-anchor', 'middle')
+//                     .attr('dominant-baseline', 'central')
+//                     .attr("x", x)
+//                     .attr("y", y)
+//                     .attr("class", "threat")
+//                     .style('font-family','FontAwesome')
+//                     .style('font-size','20px')
+//                     .style('fill', 'red')
+//                     .text(function (d) {
+//                     return '\uf2be'
+//                     });
+//         return Threat
+// };
 
 //button functions
 $('#firstFloorBtn').click(function(){
@@ -143,30 +162,6 @@ $('#basementFloorBtn').click(function(){
     });
 });
 
-var canvas;
-
-function drawThreat (x, y){
-  canvas = d3.select("#map")
-    .append("svg")
-      .attr("width", 500)
-      .attr("height", 500)
-
-  var Threat = canvas.append('svg')
-                    .append('text')
-                    .attr('text-anchor', 'middle')
-                    .attr('dominant-baseline', 'central')
-                    .attr("x", x)
-                    .attr("y", y)
-                    .attr("class", "threat")
-                    .style('font-family','FontAwesome')
-                    .style('font-size','30px')
-                    .style('color', 'red')
-                    .text(function (d) {
-                    return '\uf2be'
-                    });
-        return Threat
-};
-
 function createPopover(roomId) {
      var content = '<button id="view" data-room-id="'+roomId+'" class="btn btn-sm btn-primary view-cam-btn">View Camera</button>'+
                    '<button id="set" data-room-id="'+roomId+'" class="btn btn-sm btn-primary set-dest-btn">Set Destination</button> ';
@@ -203,7 +198,8 @@ function firstFloor() {
     .append("svg")
       .attr("width", 500)
       .attr("height", 500)
-      .attr("id", "firstFloor");
+      .attr("id", "firstFloor")
+      .attr("class", "canvas-selector");
 
   // draw Polygons
   var roomA1 = createRoom('A1',[[65, 215], [65, 250], [140, 250], [140, 215]]); //[102.5, 232.5]
@@ -217,19 +213,11 @@ function firstFloor() {
   var roomA9 = createRoom('A9',[[302, 99], [302, 120], [355, 120], [355, 99]]);
   var roomA9 = createRoom('A10',[[408, 215], [408, 278], [462, 278], [462, 215]]);
 
+   //drawThreat(272.5, 245);
+  // drawThreat(320, 120);
+  // drawThreat(435.5, 245);
 
-    // function badGuy() {
-    //   $(document).on('click', '.view-cam-btn', function(){
-    //     var coverageAreaID = $(this).nextAll('input').eq(0).val();
-    //     var selection = canvas.select("#" + coverageAreaID).styles("fill", "purple");
-    //     console.log('yo yo yo '+selection.attrs('id'));
-    //     //var circle = canvas.append("circle").attr("cx", 25).attr("cy", 25).attr("r", 25).style("fill", "purple");
-    //    console.log('view cam button has parent ID: '+coverageAreaID);
-    //     });
-    // }
-    //
-    // firstFloor.badGuy = badGuy;
-}
+ };
 
 function secondFloor(){
   $("#secondFloorBtn").siblings().removeClass('active')
@@ -238,7 +226,8 @@ function secondFloor(){
     .append("svg")
       .attr("width", 500)
       .attr("height", 500)
-      .attr("id", "secondFloor");
+      .attr("id", "secondFloor")
+      .attr("class", "canvas-selector");
 
   var roomB1 = createRoom('B1', [[362, 218], [362, 282], [490, 282], [490, 218]]);
   var roomB2 = createRoom('B2', [[280, 218], [280, 282], [362, 282], [362, 218]]);
@@ -252,6 +241,8 @@ function secondFloor(){
   var roomB10 = createRoom('B10', [[368, 80], [368, 211], [400, 211], [400, 80]]);
   var roomB11 = createRoom('B11', [[368, 12], [368, 80], [490, 80], [490, 12]]);
   var roomB12 = createRoom('B12', [[23, 70], [23, 215], [176, 215], [176, 70]]);
+
+   //drawThreat(320, 120);
 }
 
 function basementFloor(){
@@ -261,11 +252,76 @@ function basementFloor(){
     .append("svg")
       .attr("width", 500)
       .attr("height", 500)
-      .attr("id", "basementFloor");
+      .attr("id", "basementFloor")
+      .attr("class", "canvas-selector");
 
   var roomC1 = createRoom('C1', [[79, 219], [79, 247], [139, 247], [139, 219]]);
   var roomC2 = createRoom('C2', [[139, 219], [139, 282], [176, 282], [176, 219]]);
+
+   //drawThreat(435.5, 245);
 };
+
+// function updateThreat(){
+//
+//     var dataFileUrl = "http://localhost/location.json";
+//     var threat = d3.select('svg.canvas-selector')
+//                     .append("svg")
+//                     .attr('id', 'threat')
+//
+//     function drawThreat (jsonData){
+//         threat.selectAll('text.threat').remove();         // makes sure we don't have old icons
+//         threat.selectAll('text')
+//               .data(jsonData)
+//                 .enter()
+//                     .append('text')
+//                     .attr("class", "threat")
+//                     .attr("x", (function (d) {  return d[0]; }))  // first element of each set
+//                     .attr("y", (function (d) {  return d[1]; }))  // second element of each set
+//                     .text('\uf2be');
+//           return threat
+//      };
+//
+//     setInterval(function(){
+//          d3.json(dataFileUrl , function (jsonData) {
+//              drawThreat(jsonData);
+//          },5000);
+//      });
+//  };
+
+function updateThreat(){
+
+    var dataFileUrl = "http://localhost/location.json";
+
+    function drawThreat (test){
+      //console.log(test);
+      var roomId = 'room'+test;
+      //console.log(roomId);
+      var polygon = d3.select('polygon#'+roomId);
+      var points = polygon.attr('points').split(",");
+      var midX = (Number(points[0]) + Number(points[6])) / 2;
+      var midY = (Number(points[1]) + Number(points[3])) / 2;
+      polygonParent = polygon.select(function() { return this.parentNode; });
+        polygonParent.selectAll('text')
+                .data(test)
+                .enter()
+                    .append('text')
+                    .attr("class", "threat")
+                    .attr("x", midX)  // first element of each set
+                    .attr("y", midY)  // second element of each set
+                    .text('\uf21b');
+     };
+
+     setInterval(function(){
+       d3.selectAll('.threat').remove();         // makes sure we don't have old icons
+       d3.json(dataFileUrl , function (data) {
+         var items =[];
+         $.each(data, function(key, val) {
+           drawThreat(val);
+         })
+       });
+     }, 5000);
+
+ };
 
 $('#attackerButton').click(function (){
     $(this).addClass("active");

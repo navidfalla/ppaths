@@ -23,6 +23,20 @@ svg#basementFloor {
   background-repeat: no-repeat;
 }
 
+svg#Threat {
+  position: relative;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.threat{
+    text-anchor:middle;
+    dominant-baseline:central;
+    font-family:FontAwesome;
+    font-size:20px;
+    fill:red;
+}
+
 .coverage-area {
   opacity: 0.5;
   fill: blue;
